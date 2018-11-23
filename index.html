@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<h3>提示信息：</h3>
+<ul>
+  <li>浏览器是否支持：<span id="isSupport"></span></li>
+  <li>service worker是否注册成功：<span id="isSuccess"></span></li>
+  <li>当前注册状态：<span id="state"></span></li>
+  <li>当前service worker状态：<span id="swState"></span></li>
+</ul>
+<video src="http://www.runoob.com/try/demo_source/movie.ogg" controls></video>
+<img src="http://jbcdn2.b0.upaiyun.com/2016/01/55b0169cdfe92b08203757ebc4e5ece2.png" alt="">
+<script>
+  if ('serviceWorker' in navigator) {
+    document.getElementById('isSupport').innerText = '支持';
+    // 开始注册service workers
+    navigator.serviceWorker.register('sw.js', {
+      scope: './'
+    }).then(function (registration) {
+      document.getElementById('isSuccess').innerText = '注册成功' + registration.scope;
+
+      var serviceWorker;
+      if (registration.installing) {
+        serviceWorker = registration.installing;
+        document.getElementById('state').innerText = 'installing';
+      } else if (registration.waiting) {
+        serviceWorker = registration.waiting;
+        document.getElementById('state').innerText = 'waiting';
+      } else if (registration.active) {
+        serviceWorker = registration.active;
+        document.getElementById('state').innerText = 'active';
+      }
+      if (serviceWorker) {
+        document.getElementById('swState').innerText = serviceWorker.state;
+        serviceWorker.addEventListener('statechange', function (e) {
+          document.getElementById('swState').append('状态变化为' + e.target.state);
+        });
+      }
+    }).catch(function (error) {
+      document.getElementById('isSuccess').innerText = '注册没有成功，错误：' + error;
+    });
+  } else {
+    document.getElementById('isSupport').innerText = '不支持';
+  }
+</script>
+</body>
+</html>
