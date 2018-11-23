@@ -2,9 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>Service Worker Demo</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="bookmark" type="image/x-icon" href="favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
+
+<h3>当前缓存为：demo-cache-v17:19</h3>
 <h3>提示信息：</h3>
 <ul>
   <li>浏览器是否支持：<span id="isSupport"></span></li>
@@ -12,15 +17,13 @@
   <li>当前注册状态：<span id="state"></span></li>
   <li>当前service worker状态：<span id="swState"></span></li>
 </ul>
-<video src="http://www.runoob.com/try/demo_source/movie.ogg" controls></video>
-<img src="http://jbcdn2.b0.upaiyun.com/2016/01/55b0169cdfe92b08203757ebc4e5ece2.png" alt="">
+<video style="width: 100%" poster="https://p1.ssl.qhimg.com/t01ae71ba8ba7cece9e.png" src="https://chimee.org/vod/1.mp4" controls></video>
+<img style="width: 100%" src="https://image-static.segmentfault.com/199/724/1997243190-5ba100d1d24d3_articlex" alt="">
 <script>
   if ('serviceWorker' in navigator) {
     document.getElementById('isSupport').innerText = '支持';
     // 开始注册service workers
-    navigator.serviceWorker.register('sw.js', {
-      scope: './'
-    }).then(function (registration) {
+    navigator.serviceWorker.register('/service-worker-demo/sw.js').then(function (registration) {
       document.getElementById('isSuccess').innerText = '注册成功' + registration.scope;
 
       var serviceWorker;

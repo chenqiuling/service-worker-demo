@@ -1,9 +1,9 @@
 importScripts('serviceworker-cache-polyfill.js');
 // 相对于 origin的路径
 var urlsToCache = [
-  'index.html',
+  '/service-worker-demo/index.html',
 ];
-var CACHE_NAME = 'demo-cache-v2';
+var CACHE_NAME = 'demo-cache-v17:19';
 
 // 安装service worker
 self.addEventListener('install', function (event) {
@@ -43,7 +43,7 @@ self.addEventListener('fetch', function (event) {
       });
     }).catch(function () {
       // 匹配失败或者网络不可用时，返回存在的某个缓存资源
-      return caches.match('index.html');
+      return caches.match('/service-worker-demo/index.html');
     })
   );
 });
