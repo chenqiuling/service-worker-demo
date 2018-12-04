@@ -3,7 +3,7 @@ importScripts('serviceworker-cache-polyfill.js');
 var urlsToCache = [
   '/service-worker-demo/index.html',
 ];
-var CACHE_NAME = 'demo-cache-v17:19';
+var CACHE_NAME = 'demo-cache-v2018-12-4-15:55';
 
 // 安装service worker
 self.addEventListener('install', function (event) {
