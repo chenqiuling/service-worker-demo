@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<h3>当前缓存为：demo-cache-v2018-12-4-15:55</h3>
+<h3 id="version">当前缓存为：</h3>
 <h3>提示信息：</h3>
 <ul>
   <li>浏览器是否支持：<span id="isSupport"></span></li>
@@ -17,37 +17,40 @@
   <li>当前注册状态：<span id="state"></span></li>
   <li>当前service worker状态：<span id="swState"></span></li>
 </ul>
-<video style="width: 100%" src="https://ac049300-fb08-40a8-8b64-afc65727915c.mdnplay.dev/shared-assets/videos/flower.mp4" controls></video>
-<img style="width: 100%" src="/support.png" alt="">
+<video style="width: 100%;height: 300px" src="/service-worker-demo/flower.mp4" controls></video>
+<img style="width: 100%;height: 300px" src="/service-worker-demo/support.png" alt="Service Worker兼容性">
 <script>
-  if ('serviceWorker' in navigator) {
-    document.getElementById('isSupport').innerText = '支持';
-    // 开始注册service workers
-    navigator.serviceWorker.register('/service-worker-demo/sw.js').then(function (registration) {
-      document.getElementById('isSuccess').innerText = '注册成功' + registration.scope;
+  window.onload = function() {
+    document.getElementById('version'.innerText) = window.CACHE_NAME;
+    if ('serviceWorker' in navigator) {
+      document.getElementById('isSupport').innerText = '支持';
+      // 开始注册service workers
+      navigator.serviceWorker.register('/service-worker-demo/sw.js').then(function (registration) {
+        document.getElementById('isSuccess').innerText = '注册成功' + registration.scope;
 
-      var serviceWorker;
-      if (registration.installing) {
-        serviceWorker = registration.installing;
-        document.getElementById('state').innerText = 'installing';
-      } else if (registration.waiting) {
-        serviceWorker = registration.waiting;
-        document.getElementById('state').innerText = 'waiting';
-      } else if (registration.active) {
-        serviceWorker = registration.active;
-        document.getElementById('state').innerText = 'active';
-      }
-      if (serviceWorker) {
-        document.getElementById('swState').innerText = serviceWorker.state;
-        serviceWorker.addEventListener('statechange', function (e) {
-          document.getElementById('swState').append('状态变化为' + e.target.state);
-        });
-      }
-    }).catch(function (error) {
-      document.getElementById('isSuccess').innerText = '注册没有成功，错误：' + error;
-    });
-  } else {
-    document.getElementById('isSupport').innerText = '不支持';
+        var serviceWorker;
+        if (registration.installing) {
+          serviceWorker = registration.installing;
+          document.getElementById('state').innerText = 'installing';
+        } else if (registration.waiting) {
+          serviceWorker = registration.waiting;
+          document.getElementById('state').innerText = 'waiting';
+        } else if (registration.active) {
+          serviceWorker = registration.active;
+          document.getElementById('state').innerText = 'active';
+        }
+        if (serviceWorker) {
+          document.getElementById('swState').innerText = serviceWorker.state;
+          serviceWorker.addEventListener('statechange', function (e) {
+            document.getElementById('swState').append('状态变化为' + e.target.state);
+          });
+        }
+      }).catch(function (error) {
+        document.getElementById('isSuccess').innerText = '注册没有成功，错误：' + error;
+      });
+    } else {
+      document.getElementById('isSupport').innerText = '不支持';
+    }
   }
 </script>
 </body>

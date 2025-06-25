@@ -2,8 +2,10 @@ importScripts('serviceworker-cache-polyfill.js');
 // 相对于 origin的路径
 var urlsToCache = [
   '/service-worker-demo/index.html',
+  '/service-worker-demo/flower.mp4',
+  '/service-worker-demo/support.png'
 ];
-var CACHE_NAME = 'demo-cache-v2018-12-4-15:55';
+window.CACHE_NAME = 'demo-cache-v2018-12-4-15:55';
 
 // 安装service worker
 self.addEventListener('install', function (event) {
