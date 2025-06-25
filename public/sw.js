@@ -1,12 +1,11 @@
 importScripts('serviceworker-cache-polyfill.js');
 // 相对于 origin的路径
 var urlsToCache = [
-  '/service-worker-demo/index.html',
-  '/service-worker-demo/flower.mp4',
-  '/service-worker-demo/support.png'
+  'index.html',
+  'assets/flower.mp4',
+  'assets/support.png'
 ];
 var CACHE_NAME = 'demo-cache-v2018-12-4-15:55';
-window.CACHE_NAME = CACHE_NAME;
 
 // 安装service worker
 self.addEventListener('install', function (event) {
@@ -46,7 +45,7 @@ self.addEventListener('fetch', function (event) {
       });
     }).catch(function () {
       // 匹配失败或者网络不可用时，返回存在的某个缓存资源
-      return caches.match('/service-worker-demo/index.html');
+      return caches.match('/index.html');
     })
   );
 });
@@ -66,4 +65,13 @@ self.addEventListener('activate', function (event) {
       );
     })
   );
+});
+
+
+self.addEventListener('message', event => {
+  if (event.data.type === 'GET_CACHE_NAMES') {
+    caches.keys().then(cacheNames => {
+      event.ports[0].postMessage(cacheNames);
+    });
+  }
 });

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Service Worker Demo</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <link rel="bookmark" type="image/x-icon" href="assets/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="assets/favicon.ico" />
+  </head>
+  <body>
+    <h3>当前缓存为：<span id="version"></span></h3>
+    <h3>提示信息：</h3>
+    <ul>
+      <li>浏览器是否支持：<span id="isSupport"></span></li>
+      <li>service worker是否注册成功：<span id="isSuccess"></span></li>
+      <li>当前注册状态：<span id="state"></span></li>
+      <li>当前service worker状态：<span id="swState"></span></li>
+    </ul>
+    <video
+      style="width: 100%; height: 290px"
+      src="assets/flower.mp4"
+      controls
+    ></video>
+    <img
+      style="width: 100%; height: 290px"
+      src="assets/support.png"
+      alt="Service Worker兼容性"
+    />
+    <script>
+      function getCacheName() {
+        return new Promise((resolve, reject) => {
+          if (!navigator.serviceWorker.controller) {
+            console.log("Service Worker 尚未控制页面");
+            return resolve("");
+          }
+
+          const messageChannel = new MessageChannel();
+          messageChannel.port1.onmessage = (event) => {
+            if (event.data.error) {
+              reject(event.data.error);
+            } else {
+              console.log("获取到的缓存名称:", event.data);
+              resolve(event.data);
+              document.getElementById("version").innerText = event.data;
+            }
+          };
+
+          navigator.serviceWorker.controller.postMessage(
+            { type: "GET_CACHE_NAMES" },
+            [messageChannel.port2]
+          );
+        });
+      }
+
+      window.onload = function () {
+        if ("serviceWorker" in navigator) {
+          document.getElementById("isSupport").innerText = "支持";
+
+          navigator.serviceWorker
+            .register("./sw.js")
+            .then((registration) => {
+              document.getElementById("isSuccess").innerText =
+                "注册成功" + registration.scope;
+
+              if (registration.installing) {
+                document.getElementById("state").innerText = "installing";
+              } else if (registration.waiting) {
+                document.getElementById("state").innerText = "waiting";
+              } else if (registration.active) {
+                document.getElementById("state").innerText = "active";
+
+                if (navigator.serviceWorker.controller) {
+                  getCacheName();
+                }
+
+                registration.active.addEventListener("statechange", (e) => {
+                  document.getElementById("swState").innerText = e.target.state;
+                  if (e.target.state === "activated") {
+                    getCacheName();
+                  }
+                });
+              }
+
+              navigator.serviceWorker.addEventListener(
+                "controllerchange",
+                () => {
+                  getCacheName();
+                }
+              );
+            })
+            .catch((error) => {
+              document.getElementById("isSuccess").innerText =
+                "注册没有成功，错误：" + error;
+            });
+        } else {
+          document.getElementById("isSupport").innerText = "不支持";
+        }
+      };
+    </script>
+  </body>
+</html>
