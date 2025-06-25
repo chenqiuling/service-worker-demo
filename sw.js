@@ -5,7 +5,8 @@ var urlsToCache = [
   '/service-worker-demo/flower.mp4',
   '/service-worker-demo/support.png'
 ];
-window.CACHE_NAME = 'demo-cache-v2018-12-4-15:55';
+var CACHE_NAME = 'demo-cache-v2018-12-4-15:55';
+window.CACHE_NAME = CACHE_NAME;
 
 // 安装service worker
 self.addEventListener('install', function (event) {
